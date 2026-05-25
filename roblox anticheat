@@ -1,0 +1,31 @@
+local Players = game:GetService("Players")
+
+-- Define your game's normal limits
+local MAX_SPEED = 16
+local MAX_JUMP = 50
+
+-- Function to check a player's character
+local function setupAntiCheat(player)
+	player.CharacterAdded:Connect(function(character)
+		local humanoid = character:WaitForChild("Humanoid")
+
+		-- Check properties continuously
+		while character.Parent ~= nil do
+			task.wait(1) -- Adjust interval as needed
+
+			-- Check for Speed Hacks
+			if humanoid.WalkSpeed > MAX_SPEED then
+				humanoid.WalkSpeed = MAX_SPEED -- Reset speed
+				-- Alternatively, you can kick them using: player:Kick("Speed hacking detected")
+			end
+
+			-- Check for Jump Hacks
+			if humanoid.JumpPower > MAX_JUMP then
+				humanoid.JumpPower = MAX_JUMP -- Reset jump
+			end
+		end
+	end)
+end
+
+-- Run the check for every player that joins
+Players.PlayerAdded:Connect(setupAntiCheat)
